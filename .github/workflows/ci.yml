@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: stable
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install markdownlint-cli2
+        run: npm install --global markdownlint-cli2
+
+      - name: Run headless tests
+        run: nvim --headless -u NONE "+lua dofile(\"tests/run.lua\")" +qa!
+
+      - name: Run health smoke test
+        run: |
+          nvim --headless -u NONE "+set rtp+=$GITHUB_WORKSPACE" \
+            "+lua require('dotagent').setup({ activation = { mode = 'manual' }, sources = { { type = 'items', items = {} } } })" \
+            "+lua require('dotagent.completion.blink').provider()" \
+            "+checkhealth dotagent" +qa!
+
+      - name: Lint README
+        run: markdownlint-cli2 README.md
