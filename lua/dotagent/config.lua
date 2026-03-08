@@ -19,7 +19,7 @@ end
 
 function M.defaults()
   return {
-    prefixes = { "$" },
+    prefixes = { "/" },
     activation = {
       mode = "contextual",
       env_var = "DOTAGENT_EDITOR_PROMPT",
@@ -38,7 +38,7 @@ function M.normalize(user_config)
   local config = vim.tbl_deep_extend("force", M.defaults(), user_config or {})
 
   if type(config.prefixes) ~= "table" or vim.tbl_isempty(config.prefixes) then
-    config.prefixes = { "$" }
+    config.prefixes = { "/" }
   end
 
   if config.activation == nil then

@@ -1,4 +1,4 @@
-*dotagent.nvim*  $-prefixed local agent completion
+*dotagent.nvim*  slash-prefixed local agent completion
 
 INTRODUCTION                                                    *dotagent-intro*
 
@@ -71,7 +71,7 @@ COMMANDS                                                       *dotagent-cmds*
 CONFIGURATION                                                 *dotagent-config*
 
 prefixes~
-  List of valid command prefixes. Default: ["$"]
+  List of valid command prefixes. Default: ["/"]
 
 activation.mode~
   "contextual", "manual", or "global"

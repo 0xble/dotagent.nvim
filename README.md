@@ -1,6 +1,6 @@
 # dotagent.nvim
 
-`dotagent.nvim` provides `$`-prefixed completion for local agent commands and skills inside Neovim.
+`dotagent.nvim` provides slash-prefixed completion for local agent commands and skills inside Neovim.
 
 It is intentionally conservative by default. The plugin stays off in normal editing buffers unless you explicitly attach it or launch Neovim through an external-editor flow marked with `DOTAGENT_EDITOR_PROMPT=1`.
 
@@ -11,14 +11,14 @@ It is intentionally conservative by default. The plugin stays off in normal edit
 
 ## Release Status
 
-The current recommended first public tag is `v0.1.0`.
+The current recommended public tag is `v0.2.0`.
 
 The plugin uses git tags for releases. There is no separate version file in the repo.
 
 ## Features
 
 - Scans local command markdown files and skill directories
-- Provides a Blink source for `$command` and `$skill` completion
+- Provides a Blink source for `/command` and `/skill` completion
 - Auto-attaches only when the editor session is launched with `DOTAGENT_EDITOR_PROMPT=1`
 - Supports manual `:DotagentAttach` and `:DotagentDetach`
 - Includes `:DotagentRefresh`, `:DotagentBrowse`, and `:DotagentHealth`
@@ -74,6 +74,8 @@ Blink setup:
 
 The best integration is an external-editor flow where Claude Code or a Codex launcher opens Neovim for prompt composition.
 
+By default the plugin uses `/`, which is the more common command prefix in editor and agent UIs.
+
 Use one shared launcher for those flows:
 
 ```sh
@@ -98,7 +100,7 @@ The fallback path is manual:
 - `:DotagentAttach`
 - `:DotagentDetach`
 
-That keeps `$` completion out of normal code editing by default.
+That keeps slash completion out of normal code editing by default.
 
 ## Commands
 
@@ -112,7 +114,6 @@ That keeps `$` completion out of normal code editing by default.
 
 ```lua
 require("dotagent").setup({
-  prefixes = { "$" },
   activation = {
     mode = "contextual",
     env_var = "DOTAGENT_EDITOR_PROMPT",
@@ -135,6 +136,30 @@ require("dotagent").setup({
           description = "Example Lua-defined item",
         },
       },
+    },
+  },
+})
+```
+
+If you want a different prefix, override it explicitly.
+
+Brian's setup keeps `$`:
+
+```lua
+require("dotagent").setup({
+  prefixes = { "$" },
+  activation = {
+    mode = "contextual",
+    env_var = "DOTAGENT_EDITOR_PROMPT",
+  },
+  sources = {
+    {
+      type = "commands",
+      path = vim.fn.expand("~/dotfiles/dot_agent/commands"),
+    },
+    {
+      type = "skills",
+      path = vim.fn.expand("~/dotfiles/dot_agent/skills"),
     },
   },
 })

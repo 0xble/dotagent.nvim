@@ -68,12 +68,12 @@ assert(#summary.warnings == 0, "expected no warnings")
 dotagent.attach(0)
 assert(dotagent.is_buffer_enabled(0) == true, "buffer should be attached")
 
-vim.api.nvim_buf_set_lines(0, 0, -1, false, { "$sh" })
+vim.api.nvim_buf_set_lines(0, 0, -1, false, { "/sh" })
 vim.api.nvim_win_set_cursor(0, { 1, 3 })
 
 local completion_response
 source:get_completions({
-  line = "$sh",
+  line = "/sh",
   cursor = { 1, 3 },
 }, function(response)
   completion_response = response
@@ -85,14 +85,14 @@ end)
 
 assert(completion_response ~= nil, "completion response missing")
 assert(#completion_response.items >= 1, "expected matching completion items")
-assert(completion_response.items[1].label == "$ship", "expected ship completion")
+assert(completion_response.items[1].label == "/ship", "expected ship completion")
 
-vim.api.nvim_buf_set_lines(0, 0, -1, false, { "$HOME" })
+vim.api.nvim_buf_set_lines(0, 0, -1, false, { "/HOME" })
 vim.api.nvim_win_set_cursor(0, { 1, 5 })
 
 local env_response
 source:get_completions({
-  line = "$HOME",
+  line = "/HOME",
   cursor = { 1, 5 },
 }, function(response)
   env_response = response
