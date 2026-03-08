@@ -75,8 +75,8 @@ prefixes~
 
 icons~
   Per-kind menu icons for Dotagent completion items.
-    - command = ""
-    - skill = "󰈙"
+    - command = "⚡"
+    - skill = "󰧑"
   Set an icon to an empty string to fall back to Blink's default kind icon.
 
 activation.mode~

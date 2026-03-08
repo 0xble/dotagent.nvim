@@ -21,8 +21,8 @@ function M.defaults()
   return {
     prefixes = { "/" },
     icons = {
-      command = "",
-      skill = "󰈙",
+      command = "⚡",
+      skill = "󰧑",
     },
     activation = {
       mode = "contextual",
