@@ -73,6 +73,12 @@ CONFIGURATION                                                 *dotagent-config*
 prefixes~
   List of valid command prefixes. Default: ["/"]
 
+icons~
+  Per-kind menu icons for Dotagent completion items.
+    - command = ""
+    - skill = "󰈙"
+  Set an icon to an empty string to fall back to Blink's default kind icon.
+
 activation.mode~
   "contextual", "manual", or "global"
 

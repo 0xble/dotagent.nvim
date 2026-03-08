@@ -20,6 +20,10 @@ end
 function M.defaults()
   return {
     prefixes = { "/" },
+    icons = {
+      command = "",
+      skill = "󰈙",
+    },
     activation = {
       mode = "contextual",
       env_var = "DOTAGENT_EDITOR_PROMPT",
@@ -39,6 +43,12 @@ function M.normalize(user_config)
 
   if type(config.prefixes) ~= "table" or vim.tbl_isempty(config.prefixes) then
     config.prefixes = { "/" }
+  end
+
+  if type(config.icons) ~= "table" then
+    config.icons = vim.deepcopy(M.defaults().icons)
+  else
+    config.icons = vim.tbl_deep_extend("force", vim.deepcopy(M.defaults().icons), config.icons)
   end
 
   if config.activation == nil then

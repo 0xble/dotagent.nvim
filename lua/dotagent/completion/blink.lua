@@ -16,6 +16,16 @@ local function completion_kind(item)
   return vim.lsp.protocol.CompletionItemKind.Keyword
 end
 
+local function completion_icon(item)
+  local config = require("dotagent").config()
+  local icon = config.icons ~= nil and config.icons[item.kind] or nil
+  if type(icon) ~= "string" or icon == "" then
+    return nil
+  end
+
+  return icon
+end
+
 local function documentation_value(item)
   local lines = {
     "Kind: " .. item.kind,
@@ -73,6 +83,7 @@ local function response_items(context)
           filterText = item.prefix .. item.name,
           sortText = util.score_item(item, token.query),
           kind = completion_kind(item),
+          kind_icon = completion_icon(item),
           detail = item.description ~= "" and item.description or item.kind,
           documentation = {
             kind = vim.lsp.protocol.MarkupKind.Markdown,

@@ -9,8 +9,7 @@ local function build_item(path, config_prefix)
   end
 
   local metadata, body = util.parse_frontmatter(content)
-  local root = vim.fn.fnamemodify(path, ":h:h")
-  local dirname = vim.fn.fnamemodify(root, ":t")
+  local dirname = vim.fn.fnamemodify(path, ":h:t")
   local name = util.trim(metadata.name or dirname)
   if name == "" then
     return nil, "missing item name"

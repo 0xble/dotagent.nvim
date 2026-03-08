@@ -11,7 +11,7 @@ It is intentionally conservative by default. The plugin stays off in normal edit
 
 ## Release Status
 
-The current recommended public tag is `v0.2.0`.
+The current recommended public tag is `v0.3.0`.
 
 The plugin uses git tags for releases. There is no separate version file in the repo.
 
@@ -19,6 +19,7 @@ The plugin uses git tags for releases. There is no separate version file in the 
 
 - Scans local command markdown files and skill directories
 - Provides a Blink source for `/command` and `/skill` completion
+- Uses distinct Dotagent menu icons by default: `` for commands, `󰈙` for skills
 - Auto-attaches only when the editor session is launched with `DOTAGENT_EDITOR_PROMPT=1`
 - Supports manual `:DotagentAttach` and `:DotagentDetach`
 - Includes `:DotagentRefresh`, `:DotagentBrowse`, and `:DotagentHealth`
@@ -114,6 +115,10 @@ That keeps slash completion out of normal code editing by default.
 
 ```lua
 require("dotagent").setup({
+  icons = {
+    command = "",
+    skill = "󰈙",
+  },
   activation = {
     mode = "contextual",
     env_var = "DOTAGENT_EDITOR_PROMPT",
@@ -140,6 +145,10 @@ require("dotagent").setup({
   },
 })
 ```
+
+`icons` is optional. Override either kind if you want a different source-specific
+menu icon, or set a value to `""` to fall back to Blink's normal kind icon for
+that item kind.
 
 If you want a different prefix, override it explicitly.
 

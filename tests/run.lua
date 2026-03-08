@@ -86,6 +86,27 @@ end)
 assert(completion_response ~= nil, "completion response missing")
 assert(#completion_response.items >= 1, "expected matching completion items")
 assert(completion_response.items[1].label == "/ship", "expected ship completion")
+assert(completion_response.items[1].kind_icon == "", "expected default command icon")
+
+vim.api.nvim_buf_set_lines(0, 0, -1, false, { "/au" })
+vim.api.nvim_win_set_cursor(0, { 1, 3 })
+
+local skill_response
+source:get_completions({
+  line = "/au",
+  cursor = { 1, 3 },
+}, function(response)
+  skill_response = response
+end)
+
+vim.wait(1000, function()
+  return skill_response ~= nil
+end)
+
+assert(skill_response ~= nil, "skill response missing")
+assert(#skill_response.items >= 1, "expected matching skill completion items")
+assert(skill_response.items[1].label == "/auth", "expected auth completion")
+assert(skill_response.items[1].kind_icon == "󰈙", "expected default skill icon")
 
 vim.api.nvim_buf_set_lines(0, 0, -1, false, { "/HOME" })
 vim.api.nvim_win_set_cursor(0, { 1, 5 })
