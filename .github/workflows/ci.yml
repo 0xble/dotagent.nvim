@@ -15,7 +15,8 @@ jobs:
       - name: Setup Neovim
         uses: rhysd/action-setup-vim@v1
         with:
-          neovim: stable
+          neovim: true
+          version: stable
 
       - name: Setup Node
         uses: actions/setup-node@v4
