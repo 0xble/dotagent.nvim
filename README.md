@@ -1,11 +1,10 @@
 # dotagent.nvim
 
-`dotagent.nvim` provides slash-prefixed completion for local agent commands and
-skills inside Neovim.
+`dotagent.nvim` adds Claude Code and Codex-style `/command` and `/skill`
+completion to your Ctrl+G prompt editor in Neovim, configured to your local
+agent commands and skills.
 
-It is intentionally conservative by default. The plugin stays off in normal
-editing buffers unless you explicitly attach it or launch Neovim through an
-external-editor flow marked with `DOTAGENT_EDITOR_PROMPT=1`.
+[![dotagent.nvim demo](assets/dotagent-demo.gif)](assets/dotagent-demo.mp4)
 
 ## Requirements
 
@@ -109,7 +108,8 @@ session stay unaffected.
 
 ## Default Behavior
 
-Without `DOTAGENT_EDITOR_PROMPT=1`, the plugin does not auto-attach in regular buffers.
+Without `DOTAGENT_EDITOR_PROMPT=1`, the plugin does not auto-attach in regular
+buffers.
 
 The fallback path is manual:
 
@@ -161,13 +161,14 @@ require("dotagent").setup({
 })
 ```
 
-`icons` is optional. Override either kind if you want a different source-specific
-menu icon, or set a value to `""` to fall back to Blink's normal kind icon for
+`icons` is optional. Override either kind if you want a different
+source-specific menu icon, or set a value to `""` to fall back to Blink's normal
+kind icon for
 that item kind.
 
 If you want a different prefix, override it explicitly.
 
-Brian's setup keeps `$`:
+My setup keeps `$`:
 
 ```lua
 require("dotagent").setup({
