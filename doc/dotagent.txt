@@ -2,8 +2,8 @@
 
 INTRODUCTION                                                    *dotagent-intro*
 
-dotagent.nvim indexes local command markdown files and skill directories and
-exposes them as a Blink completion source.
+dotagent.nvim indexes local command, skill, and prompt directories and exposes
+them as a Blink completion source.
 
 The plugin is conservative by default. It only auto-attaches when Neovim is
 started with DOTAGENT_EDITOR_PROMPT=1. Otherwise use |:DotagentAttach|.
@@ -16,15 +16,8 @@ SETUP                                                           *dotagent-setup*
       mode = "contextual",
       env_var = "DOTAGENT_EDITOR_PROMPT",
     },
-    sources = {
-      {
-        type = "commands",
-        path = vim.fn.expand("~/dotfiles/dot_agent/commands"),
-      },
-      {
-        type = "skills",
-        path = vim.fn.expand("~/dotfiles/dot_agent/skills"),
-      },
+    agent_dirs = {
+      vim.fn.expand("~/.claude"),
     },
   })
 <
@@ -34,6 +27,16 @@ Blink provider:
 >
   opts.sources.providers.dotagent = require("dotagent.completion.blink").provider()
 <
+
+By default the plugin looks for these native agent roots:
+
+  - ~/.agent/shared
+  - ~/.agent/runtimes/codex
+  - ~/.agent/runtimes/claude
+  - ~/.claude
+
+For each root it reads commands/*.md, skills/*/SKILL.md, and prompts/*.md only
+when the prompts directory exists.
 
 RECOMMENDED INTEGRATION                                 *dotagent-integration*
 
@@ -77,6 +80,7 @@ icons~
   Per-kind menu icons for Dotagent completion items.
     - command = "⚡"
     - skill = "󰧑"
+    - prompt = "󰘧"
   Set an icon to an empty string to fall back to Blink's default kind icon.
 
 activation.mode~
@@ -85,10 +89,27 @@ activation.mode~
 activation.env_var~
   Default: "DOTAGENT_EDITOR_PROMPT"
 
+agent_dirs~
+  Shared agent roots. Each root may contain commands/, skills/, and an optional
+  prompts/ directory.
+
+command_dirs~
+  Explicit command directories. Overrides command directories derived from
+  agent_dirs.
+
+skill_dirs~
+  Explicit skill directories. Overrides skill directories derived from
+  agent_dirs.
+
+prompt_dirs~
+  Explicit prompt directories. Overrides prompt directories derived from
+  agent_dirs.
+
 sources~
   List of source definitions:
     - { type = "commands", path = "..." }
     - { type = "skills", path = "..." }
+    - { type = "prompts", path = "..." }
     - { type = "items", items = { ... } }
 
 vim:tw=78:ts=8:noet:ft=help:norl:

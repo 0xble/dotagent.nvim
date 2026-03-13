@@ -5,6 +5,7 @@ local util = require("dotagent.util")
 local M = {}
 
 local state = {
+  user_config = {},
   config = config_mod.defaults(),
   commands_registered = false,
   autocommands_registered = false,
@@ -102,7 +103,8 @@ local function insert_text_at_cursor(value)
 end
 
 function M.setup(user_config)
-  state.config = config_mod.normalize(user_config)
+  state.user_config = vim.deepcopy(user_config or {})
+  state.config = config_mod.normalize(state.user_config)
   ensure_setup()
   index.refresh(state.config)
   attach_initial_prompt_buffer()
@@ -114,6 +116,7 @@ end
 
 function M.refresh()
   ensure_setup()
+  state.config = config_mod.normalize(state.user_config)
   return index.refresh(current_config())
 end
 

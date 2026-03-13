@@ -2,7 +2,7 @@ local util = require("dotagent.util")
 
 local M = {}
 
-local function build_item(path, config_prefix)
+local function build_item(path, config_prefix, source_config)
   local content, err = util.read_file(path)
   if content == nil then
     return nil, err
@@ -25,6 +25,7 @@ local function build_item(path, config_prefix)
     prefix = config_prefix,
     source = "commands",
     content = content,
+    warn_on_duplicate = source_config.warn_on_duplicate ~= false,
   }
 end
 
@@ -41,7 +42,7 @@ function M.collect(source_config, config_prefix)
   table.sort(paths)
 
   for _, path in ipairs(paths) do
-    local item, err = build_item(path, config_prefix)
+    local item, err = build_item(path, config_prefix, source_config)
     if item == nil then
       table.insert(warnings, "failed to parse command " .. path .. ": " .. err)
     else

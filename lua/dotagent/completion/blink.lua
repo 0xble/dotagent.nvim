@@ -10,6 +10,9 @@ local function completion_kind(item)
     if item.kind == "skill" then
       return blink_types.CompletionItemKind.Module
     end
+    if item.kind == "prompt" then
+      return blink_types.CompletionItemKind.Snippet
+    end
     return blink_types.CompletionItemKind.Keyword
   end
 
@@ -122,7 +125,9 @@ function Source:get_trigger_characters()
 end
 
 function Source:should_show_items(context, items)
-  return util.token_context(context.line, context.cursor[2], require("dotagent").config().prefixes) ~= nil and #items > 0
+  return util.token_context(context.line, context.cursor[2], require("dotagent").config().prefixes)
+      ~= nil
+    and #items > 0
 end
 
 function Source:get_completions(context, callback)

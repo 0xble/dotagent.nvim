@@ -1,8 +1,8 @@
 # dotagent.nvim
 
-`dotagent.nvim` adds Claude Code and Codex-style `/command` and `/skill`
-completion to your Ctrl+G prompt editor in Neovim, configured to your local
-agent commands and skills.
+`dotagent.nvim` adds Claude Code and Codex-style `/command`, `/skill`, and
+`/prompt` completion to your Ctrl+G prompt editor in Neovim, configured to your
+local agent directories.
 
 [![dotagent.nvim demo](assets/dotagent-demo.gif)](assets/dotagent-demo.mp4)
 
@@ -20,10 +20,11 @@ repo.
 
 ## Features
 
-- Scans local command markdown files and skill directories
-- Provides a Blink source for `/command` and `/skill` completion
-- Uses distinct Dotagent menu icons by default: `⚡` for commands,
-  `󰧑` for skills
+- Scans native agent roots for `commands/`, `skills/`, and optional `prompts/`
+- Supports explicit `command_dirs`, `skill_dirs`, and `prompt_dirs` overrides
+- Provides a Blink source for `/command`, `/skill`, and `/prompt` completion
+- Uses distinct Dotagent menu icons by default: `⚡` for commands, `󰧑` for
+  skills, `󰘧` for prompts
 - Auto-attaches only when the editor session is launched with
   `DOTAGENT_EDITOR_PROMPT=1`
 - Supports manual `:DotagentAttach` and `:DotagentDetach`
@@ -37,21 +38,23 @@ Lazy example:
 {
   "0xble/dotagent.nvim",
   config = function()
-    require("dotagent").setup({
-      sources = {
-        {
-          type = "commands",
-          path = vim.fn.expand("~/dotfiles/dot_agent/commands"),
-        },
-        {
-          type = "skills",
-          path = vim.fn.expand("~/dotfiles/dot_agent/skills"),
-        },
-      },
-    })
+    require("dotagent").setup()
   end,
 }
 ```
+
+By default `dotagent.nvim` looks for native Codex and Claude roots:
+
+- `~/.agent/shared`
+- `~/.agent/runtimes/codex`
+- `~/.agent/runtimes/claude`
+- `~/.claude`
+
+For each root it reads:
+
+- `commands/*.md`
+- `skills/*/SKILL.md`
+- `prompts/*.md`, only when the `prompts/` folder exists
 
 Blink setup:
 
@@ -133,20 +136,16 @@ require("dotagent").setup({
   icons = {
     command = "⚡",
     skill = "󰧑",
+    prompt = "󰘧",
   },
   activation = {
     mode = "contextual",
     env_var = "DOTAGENT_EDITOR_PROMPT",
   },
+  agent_dirs = {
+    vim.fn.expand("~/.claude"),
+  },
   sources = {
-    {
-      type = "commands",
-      path = vim.fn.expand("~/dotfiles/dot_agent/commands"),
-    },
-    {
-      type = "skills",
-      path = vim.fn.expand("~/dotfiles/dot_agent/skills"),
-    },
     {
       type = "items",
       items = {
@@ -160,6 +159,34 @@ require("dotagent").setup({
   },
 })
 ```
+
+If your agent root has a custom prompt folder, `dotagent.nvim` reads it
+automatically:
+
+```text
+~/.claude/
+  commands/
+  skills/
+  prompts/
+```
+
+Use per-type overrides when one kind lives elsewhere:
+
+```lua
+require("dotagent").setup({
+  agent_dirs = {
+    vim.fn.expand("~/.claude"),
+  },
+  prompt_dirs = {
+    vim.fn.expand("~/custom-prompts"),
+  },
+})
+```
+
+Legacy `sources` path definitions still work. If you provide `agent_dirs`,
+`command_dirs`, `skill_dirs`, or `prompt_dirs`, those directory lists become the
+authoritative path configuration for their type, while `items` sources still
+merge normally.
 
 `icons` is optional. Override either kind if you want a different
 source-specific menu icon, or set a value to `""` to fall back to Blink's normal
@@ -177,15 +204,11 @@ require("dotagent").setup({
     mode = "contextual",
     env_var = "DOTAGENT_EDITOR_PROMPT",
   },
-  sources = {
-    {
-      type = "commands",
-      path = vim.fn.expand("~/dotfiles/dot_agent/commands"),
-    },
-    {
-      type = "skills",
-      path = vim.fn.expand("~/dotfiles/dot_agent/skills"),
-    },
+  command_dirs = {
+    vim.fn.expand("~/.claude/commands"),
+  },
+  skill_dirs = {
+    vim.fn.expand("~/.claude/skills"),
   },
 })
 ```
