@@ -21,6 +21,7 @@ function M.collect(source_config, config_prefix)
         prefix = raw_item.prefix or config_prefix,
         source = "items",
         content = raw_item.content or "",
+        warn_on_duplicate = raw_item.warn_on_duplicate ~= false,
       })
     end
   end

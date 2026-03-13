@@ -12,8 +12,20 @@ function M.check()
   local config = dotagent.config()
   local summary = dotagent.refresh()
 
+  local function format_dirs(paths)
+    if type(paths) ~= "table" or vim.tbl_isempty(paths) then
+      return "(none)"
+    end
+
+    return table.concat(paths, ", ")
+  end
+
   ok_info("activation mode: " .. config.activation.mode)
   ok_info("activation env var: " .. config.activation.env_var)
+  ok_info("agent dirs: " .. format_dirs(config.agent_dirs))
+  ok_info("command dirs: " .. format_dirs(config.command_dirs))
+  ok_info("skill dirs: " .. format_dirs(config.skill_dirs))
+  ok_info("prompt dirs: " .. format_dirs(config.prompt_dirs))
   ok_info("indexed items: " .. tostring(#summary.items))
 
   if #summary.warnings == 0 then
