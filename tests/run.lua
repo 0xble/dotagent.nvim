@@ -88,12 +88,16 @@ assert(#completion_response.items >= 1, "expected matching completion items")
 assert(completion_response.items[1].label == "/ship", "expected ship completion")
 assert(completion_response.items[1].kind_icon == "⚡", "expected default command icon")
 assert(
-  not completion_response.items[1].documentation.value:find("Kind:", 1, true),
-  "documentation should not include the item kind label"
+  completion_response.items[1].detail == nil,
+  "completion items should not repeat the description in detail"
 )
 assert(
-  completion_response.items[1].documentation.value:find("Ship the current branch", 1, true) ~= nil,
-  "documentation should keep the item description"
+  completion_response.items[1].documentation.kind == vim.lsp.protocol.MarkupKind.PlainText,
+  "documentation should render as plain text"
+)
+assert(
+  completion_response.items[1].documentation.value == 'description: "Ship the current branch"',
+  "documentation should show only the quoted description line"
 )
 
 vim.api.nvim_buf_set_lines(0, 0, -1, false, { "/au" })

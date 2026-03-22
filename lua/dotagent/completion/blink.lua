@@ -27,27 +27,11 @@ local function completion_icon(item)
 end
 
 local function documentation_value(item)
-  local lines = {}
-
-  if item.description ~= nil and item.description ~= "" then
-    table.insert(lines, item.description)
+  if item.description == nil or item.description == "" then
+    return nil
   end
 
-  if item.path ~= nil and item.path ~= "" then
-    if #lines > 0 then
-      table.insert(lines, "")
-    end
-    table.insert(lines, "Path: " .. item.path)
-  end
-
-  if item.content ~= nil and item.content ~= "" then
-    if #lines > 0 then
-      table.insert(lines, "")
-    end
-    table.insert(lines, item.content)
-  end
-
-  return table.concat(lines, "\n")
+  return string.format("description: %q", item.description)
 end
 
 local function response_items(context)
@@ -77,6 +61,7 @@ local function response_items(context)
       end
 
       if matches then
+        local documentation = documentation_value(item)
         table.insert(items, {
           label = item.prefix .. item.name,
           insertText = item.prefix .. item.name,
@@ -85,11 +70,10 @@ local function response_items(context)
           sortText = util.score_item(item, token.query),
           kind = completion_kind(item),
           kind_icon = completion_icon(item),
-          detail = item.description ~= "" and item.description or item.kind,
-          documentation = {
-            kind = vim.lsp.protocol.MarkupKind.Markdown,
-            value = documentation_value(item),
-          },
+          documentation = documentation ~= nil and {
+            kind = vim.lsp.protocol.MarkupKind.PlainText,
+            value = documentation,
+          } or nil,
           data = {
             dotagent_item = item,
           },
