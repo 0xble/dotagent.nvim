@@ -92,12 +92,26 @@ assert(
   "completion items should not repeat the description in detail"
 )
 assert(
-  completion_response.items[1].documentation.kind == vim.lsp.protocol.MarkupKind.PlainText,
-  "documentation should render as plain text"
+  completion_response.items[1].documentation.kind == vim.lsp.protocol.MarkupKind.Markdown,
+  "documentation should render as markdown"
 )
 assert(
-  completion_response.items[1].documentation.value == 'description: "Ship the current branch"',
-  "documentation should show only the quoted description line"
+  completion_response.items[1].documentation.value:find('description: "Ship the current branch"', 1, true)
+    ~= nil,
+  "documentation should keep the quoted description line"
+)
+assert(
+  completion_response.items[1].documentation.value:find("Path: " .. temp_root .. "/commands/ship.md", 1, true)
+    ~= nil,
+  "documentation should include the item path"
+)
+assert(
+  completion_response.items[1].documentation.value:find("# Ship", 1, true) ~= nil,
+  "documentation should include the file body without frontmatter"
+)
+assert(
+  not completion_response.items[1].documentation.value:find("\n---\n", 1, true),
+  "documentation should not repeat the frontmatter block"
 )
 
 vim.api.nvim_buf_set_lines(0, 0, -1, false, { "/au" })

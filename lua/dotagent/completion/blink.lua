@@ -27,11 +27,35 @@ local function completion_icon(item)
 end
 
 local function documentation_value(item)
-  if item.description == nil or item.description == "" then
+  local lines = {}
+
+  if item.description ~= nil and item.description ~= "" then
+    table.insert(lines, string.format('description: %q', item.description))
+  end
+
+  if item.path ~= nil and item.path ~= "" then
+    if #lines > 0 then
+      table.insert(lines, "")
+    end
+    table.insert(lines, "Path: " .. item.path)
+  end
+
+  if item.content ~= nil and item.content ~= "" then
+    local _, body = util.parse_frontmatter(item.content)
+    local normalized_body = util.trim(body)
+    if normalized_body ~= "" then
+      if #lines > 0 then
+        table.insert(lines, "")
+      end
+      table.insert(lines, normalized_body)
+    end
+  end
+
+  if #lines == 0 then
     return nil
   end
 
-  return string.format("description: %q", item.description)
+  return table.concat(lines, "\n")
 end
 
 local function response_items(context)
@@ -71,7 +95,7 @@ local function response_items(context)
           kind = completion_kind(item),
           kind_icon = completion_icon(item),
           documentation = documentation ~= nil and {
-            kind = vim.lsp.protocol.MarkupKind.PlainText,
+            kind = vim.lsp.protocol.MarkupKind.Markdown,
             value = documentation,
           } or nil,
           data = {
