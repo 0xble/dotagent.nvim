@@ -87,6 +87,14 @@ assert(completion_response ~= nil, "completion response missing")
 assert(#completion_response.items >= 1, "expected matching completion items")
 assert(completion_response.items[1].label == "/ship", "expected ship completion")
 assert(completion_response.items[1].kind_icon == "⚡", "expected default command icon")
+assert(
+  not completion_response.items[1].documentation.value:find("Kind:", 1, true),
+  "documentation should not include the item kind label"
+)
+assert(
+  completion_response.items[1].documentation.value:find("Ship the current branch", 1, true) ~= nil,
+  "documentation should keep the item description"
+)
 
 vim.api.nvim_buf_set_lines(0, 0, -1, false, { "/au" })
 vim.api.nvim_win_set_cursor(0, { 1, 3 })

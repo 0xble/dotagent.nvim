@@ -27,22 +27,23 @@ local function completion_icon(item)
 end
 
 local function documentation_value(item)
-  local lines = {
-    "Kind: " .. item.kind,
-  }
+  local lines = {}
 
   if item.description ~= nil and item.description ~= "" then
-    table.insert(lines, "")
     table.insert(lines, item.description)
   end
 
   if item.path ~= nil and item.path ~= "" then
-    table.insert(lines, "")
+    if #lines > 0 then
+      table.insert(lines, "")
+    end
     table.insert(lines, "Path: " .. item.path)
   end
 
   if item.content ~= nil and item.content ~= "" then
-    table.insert(lines, "")
+    if #lines > 0 then
+      table.insert(lines, "")
+    end
     table.insert(lines, item.content)
   end
 
