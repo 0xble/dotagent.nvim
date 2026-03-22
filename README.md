@@ -13,7 +13,7 @@ agent commands and skills.
 
 ## Release Status
 
-The current recommended public tag is `v0.3.1`.
+The current recommended public tag is `v0.4.0`.
 
 The plugin uses git tags for releases. There is no separate version file in the
 repo.
